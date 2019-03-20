@@ -1,53 +1,56 @@
-pipeline {
-    agent any
-    tools {
-        maven 'Maven3.6.0'
-        jdk 'jdk8'
-    }
+node {
 
+    checkout scm
+
+    // Pega o commit id para ser usado de tag (versionamento) na imagem
+    sh "git rev-parse --short HEAD > commit-id"
+    tag = readFile('commit-id').replace("\n", "").replace("\r", "")
     
-    environment {
-        PROJECT_PORT = '8080'
-        MYSQL_URL    = 'jdbc:mysql://mysql.mmpasserini.com.br:3306/mmpasserini01?useTimezone=true&serverTimezone=UTC'
-        MYSQL_DROPTYPE = 'create-drop'
-        MYSQL_USER = 'mmpasser01_add1'
-        MYSQL_PASSWORD = 'Rapha123'
-    }   
-
+    // configura o nome da aplicação, o endereço do repositório e o nome da imagem com a versão
     appName = "projetogeral-api"
     registryHost = "127.0.0.1:30400/"
-    tag = "1.0"
     imageName = "${registryHost}${appName}:${tag}"
+
+
+    PROJECT_PORT = '8080'
+    MYSQL_URL    = 'jdbc:mysql://mysql.mmpasserini.com.br:3306/mmpasserini01?useTimezone=true&serverTimezone=UTC'
+    MYSQL_DROPTYPE = 'create-drop'
+    MYSQL_USER = 'mmpasser01_add1'
+    MYSQL_PASSWORD = 'Rapha123'
     
-    stages {
-        stage ('Initialize') {
-            steps {
-                sh '''
-                    echo "PATH = ${PATH}"
-                    echo "M2_HOME = ${M2_HOME}"
-                '''
-            }
-        }
 
-        stage ('Build') {
-            steps {
-                sh 'mvn -Dmaven.test.failure.ignore=true install' 
-            }
-            post {
-                success {
-                    junit 'target/surefire-reports/**/*.xml' 
-                }
-            }
-        }
+    stage "Check Path"
 
-        stage ('deploy') {
-            steps {
-                input "Deploy to PROD?"
-                customImage.push('latest')
-                sh "kubectl apply -f https://raw.githubusercontent.com/RaphaelBlefari/${appName}/master/${appName}.yaml"
-                sh "kubectl set image deployment app app=${imageName} --record"
-                sh "kubectl rollout status deployment/${appName}"
-            }
-        }
-    }
+        sh ''' echo "PATH = ${PATH}" echo "M2_HOME = ${M2_HOME}" '''
+        
+    
+    stage "Buidando Aplicação"
+    
+        sh 'mvn -Dmaven.test.failure.ignore=true install' 
+
+     stage "Buildando Imagem"
+
+        def customImage = docker.build("${imageName}")
+
+    stage "Push para registry"
+
+        customImage.push()
+
+    stage "Deploy PROD"
+
+        input "Deploy to PROD?"
+        customImage.push('latest')
+        sh "kubectl apply -f https://raw.githubusercontent.com/RaphaelBlefari/${appName}/master/${appName}.yaml"
+        sh "kubectl set image deployment app app=${imageName} --record"
+        sh "kubectl rollout status deployment/${appName}"
+
+
 }
+
+
+
+
+
+
+
+
