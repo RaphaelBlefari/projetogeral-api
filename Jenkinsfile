@@ -4,6 +4,16 @@ pipeline {
         maven 'Maven3.6.0'
         jdk 'jdk8'
     }
+
+    
+    environment {
+        PROJECT_PORT = '8080'
+        MYSQL_URL    = 'mysql.mmpasserini.com.br'
+        MYSQL_DROPTYPE = 'create-drop'
+        MYSQL_USER = 'mmpasser01_add1'
+        MYSQL_PASSWORD = 'Rapha123'
+    }   
+
     stages {
         stage ('Initialize') {
             steps {
