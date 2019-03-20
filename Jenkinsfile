@@ -22,28 +22,14 @@ pipeline {
                 '''
             }
 
-        }      
-    }
+        }
 
-      stage ('Build') {
+        stage ('Build') {
             steps {
                 sh 'mvn package' 
             }
         }
 
-        stage "Buildando Imagem"
-
-            def customImage = docker.build("${imageName}")
-
-        stage "Push para registry"
-
-            customImage.push()
-
-            stage "Deploy PROD"
-
-        input "Deploy to PROD?"
-        customImage.push('latest')
-        sh "kubectl apply -f https://raw.githubusercontent.com/RaphaelBlefari/${appName}/master/${appName}.yaml"
-        sh "kubectl set image deployment app app=${imageName} --record"
-        sh "kubectl rollout status deployment/${appName}"
+        
+    }
 }
