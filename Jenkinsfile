@@ -8,7 +8,6 @@ pipeline {
     registryHost = "127.0.0.1:30400/"
     imageName = "${registryHost}${appName}:${tag}"
 
-
     environment {
         PROJECT_PORT = '8080'
         MYSQL_URL    = 'mysql.mmpasserini.com.br'
@@ -17,10 +16,12 @@ pipeline {
         MYSQL_PASSWORD = 'Rapha123'
     }   
 
+
     tools {
         maven 'Maven3.6.0'
         jdk 'jdk8'
     }
+
     stages {
         stage ('Initialize') {
             steps {
