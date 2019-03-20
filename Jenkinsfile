@@ -13,12 +13,12 @@ pipeline {
         MYSQL_USER = 'mmpasser01_add1'
         MYSQL_PASSWORD = 'Rapha123'
     }   
+
+    appName = "projetogeral-api"
+    registryHost = "127.0.0.1:30400/"
+    tag = "1.0"
+    imageName = "${registryHost}${appName}:${tag}"
     
-     stage ('Pegando Versão')  {
-        checkout scm
-        sh "git rev-parse --short HEAD > commit-id"
-        tag = readFile('commit-id').replace("\n", "").replace("\r", "")
-     }
     stages {
         stage ('Initialize') {
             steps {
@@ -37,6 +37,16 @@ pipeline {
                 success {
                     junit 'target/surefire-reports/**/*.xml' 
                 }
+            }
+        }
+
+        stage ('deploy') {
+            steps {
+                input "Deploy to PROD?"
+                customImage.push('latest')
+                sh "kubectl apply -f https://raw.githubusercontent.com/RaphaelBlefari/${appName}/master/${appName}.yaml"
+                sh "kubectl set image deployment app app=${imageName} --record"
+                sh "kubectl rollout status deployment/${appName}"
             }
         }
     }
