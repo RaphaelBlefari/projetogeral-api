@@ -1,5 +1,10 @@
 node {
 
+     def mvnHome = tool 'Maven3.6.0'
+     def javaHome = tool 'jdk8'
+    sh "${mvnHome}/bin/mvn -B verify"
+    sh "${javaHome}/bin -B verify"
+
     checkout scm
 
     // Pega o commit id para ser usado de tag (versionamento) na imagem
