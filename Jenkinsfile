@@ -17,12 +17,13 @@ node {
     imageName = "${registryHost}${appName}:${tag}"
 
 
+    environment {
     PROJECT_PORT = '8080'
     MYSQL_URL    = 'jdbc:mysql://mysql.mmpasserini.com.br:3306/mmpasserini01?useTimezone=true&serverTimezone=UTC'
     MYSQL_DROPTYPE = 'create-drop'
     MYSQL_USER = 'mmpasser01_add1'
     MYSQL_PASSWORD = 'Rapha123'
-    
+    }    
 
     stage "Check Path"
 
