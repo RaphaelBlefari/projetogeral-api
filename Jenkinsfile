@@ -1,10 +1,4 @@
 
-def  appName = "projetogeral-api"
-def  registryHost = "127.0.0.1:30400/"
-def  tag = "1.0"
-def  imageName = "${registryHost}${appName}:${tag}"
-
-
 pipeline {
     agent any
     tools {
