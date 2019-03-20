@@ -1,28 +1,18 @@
 pipeline {
+    agent any
 
-     checkout scm
 
     sh "git rev-parse --short HEAD > commit-id"
     tag = readFile('commit-id').replace("\n", "").replace("\r", "")
-
     appName = "projetogeral-api"
     registryHost = "127.0.0.1:30400/"
     imageName = "${registryHost}${appName}:${tag}"
-
-    environment {
-        PROJECT_PORT = '8080'
-        MYSQL_URL    = 'mysql.mmpasserini.com.br'
-        MYSQL_DROPTYPE = 'create-drop'
-        MYSQL_USER = 'mmpasser01_add1'
-        MYSQL_PASSWORD = 'Rapha123'
-    }   
 
 
     tools {
         maven 'Maven3.6.0'
         jdk 'jdk8'
     }
-
     stages {
         stage ('Initialize') {
             steps {
