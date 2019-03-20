@@ -14,6 +14,9 @@ pipeline {
         MYSQL_PASSWORD = 'Rapha123'
     }   
 
+    sh "git rev-parse --short HEAD > commit-id"
+    tag = readFile('commit-id').replace("\n", "").replace("\r", "")
+
     stages {
         stage ('Initialize') {
             steps {
