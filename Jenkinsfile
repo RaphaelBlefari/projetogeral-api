@@ -1,5 +1,7 @@
 pipeline {
+
     agent any
+     checkout scm
 
 
     sh "git rev-parse --short HEAD > commit-id"
