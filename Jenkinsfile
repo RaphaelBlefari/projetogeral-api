@@ -1,16 +1,7 @@
 pipeline {
     agent any
-
-
-    sh "git rev-parse --short HEAD > commit-id"
-    tag = readFile('commit-id').replace("\n", "").replace("\r", "")
-    appName = "projetogeral-api"
-    registryHost = "127.0.0.1:30400/"
-    imageName = "${registryHost}${appName}:${tag}"
-
-
     tools {
-        maven 'Maven3.6.0'
+        maven 'Maven 3.3.9'
         jdk 'jdk8'
     }
     stages {
@@ -21,7 +12,6 @@ pipeline {
                     echo "M2_HOME = ${M2_HOME}"
                 '''
             }
-
         }
 
         stage ('Build') {
@@ -29,7 +19,5 @@ pipeline {
                 sh 'mvn package' 
             }
         }
-
-        
     }
 }
