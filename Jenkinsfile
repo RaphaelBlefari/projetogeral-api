@@ -24,6 +24,7 @@ pipeline {
 				script {
 					def customImage = docker.build("127.0.0.1:30400/${appName}:${env.BUILD_ID}", ".")
     				customImage.push()
+                    customImage.push('latest')
     			}
 			}
 		}
@@ -31,8 +32,7 @@ pipeline {
 		stage ('deploy') {
             steps {
                 //sh "kubectl apply -f https://raw.githubusercontent.com/RaphaelBlefari/${appName}/master/${appName}.yaml"
-                sh "echo ${appName} ${imageName} ${namespace}"
-                customImage.push('latest')
+                sh "echo ${appName} ${imageName} ${namespace}"                
                 sh "kubectl create -f https://raw.githubusercontent.com/RaphaelBlefari/${appName}/master/${appName}.yaml -n ${namespace}"
                 sh "kubectl set image deployment ${appName} ${appName}=${imageName} -n ${namespace}"
                 sh "kubectl rollout status deployment/${appName} -n ${namespace}"
