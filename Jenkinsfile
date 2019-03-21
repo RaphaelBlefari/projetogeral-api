@@ -12,7 +12,7 @@ pipeline {
       }
 
 
-      stage('Maven Build') {
+      stage('Maven Build2') {
         steps {
           echo imageName
         }
