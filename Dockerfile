@@ -1,4 +1,5 @@
 FROM openjdk:8-jdk-alpine
-ARG target\ProjetoGeral-0.0.1.jar
-COPY ${JAR_FILE} app.jar
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+VOLUME /tmp
+ADD target\ProjetoGeral-0.0.1.jar target/app.jar
+RUN /bin/sh -c 'touch target/app.jar'
+ENTRYPOINT ["java","-jar","-Dspring.profiles.active=default","target/app.jar"]
