@@ -25,7 +25,7 @@ spec:
         app: projetogeral-api
     spec:
       containers:
-        - name: app
+        - name: projetogeral-api
           image: "127.0.0.1:30400/projetogeral-api:latest"
           imagePullPolicy: Always
           ports:
