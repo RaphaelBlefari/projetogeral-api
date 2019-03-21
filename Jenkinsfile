@@ -7,14 +7,14 @@ pipeline {
 
       stage('Maven Build') {
         steps {
-          faca deploy ${namespace}
+           echo namespace
         }
       }
 
 
       stage('Maven Build') {
         steps {
-          faca pizza ${imageName}
+          echo imageName
         }
       }
 
