@@ -1,47 +1,22 @@
-def    PROJECT_PORT = '8080'
-def    MYSQL_URL    = 'jdbc:mysql://mysql.mmpasserini.com.br:3306/mmpasserini01?useTimezone=true&serverTimezone=UTC'
-def    MYSQL_DROPTYPE = 'create-drop'
-def    MYSQL_USER = 'mmpasser01_add1'
-def    MYSQL_PASSWORD = 'Rapha123'
-
-
+def imageName = "${registryHost}${appName}:${env.BUILD_ID}"
+def namespace = 'applications'
 
 pipeline {
-    agent any
-    tools {
-        maven 'Maven3.6.0'
-        jdk 'jdk8'
-    }
-    
+    agent any 
     stages {
-        stage ('Initialize') {
-            steps {
-                sh '''
-                    echo "PATH = ${PATH}"
-                    echo "M2_HOME = ${M2_HOME}"
-                '''
-            }
-        }
 
-        stage ('Build') {
-            steps {
-                sh 'mvn -Dmaven.test.failure.ignore=true install' 
-            }
-            post {
-                success {
-                    junit 'target/surefire-reports/**/*.xml' 
-                }
-            }
+      stage('Maven Build') {
+        steps {
+          faca deploy ${namespace}
         }
+      }
 
-        stage ('deploy') {
-            steps {
-                input "Deploy to PROD?"
-                customImage.push('latest')
-                sh "kubectl apply -f https://raw.githubusercontent.com/RaphaelBlefari/${appName}/master/${appName}.yaml"
-                sh "kubectl set image deployment app app=${imageName} --record"
-                sh "kubectl rollout status deployment/${appName}"
-            }
+
+      stage('Maven Build') {
+        steps {
+          faca pizza ${imageName}
         }
+      }
+
     }
 }
