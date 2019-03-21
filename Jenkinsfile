@@ -12,7 +12,7 @@ pipeline {
 
 		 stage('Maven Build') {
              steps {	
-            	 withMaven(maven: 'M3', mavenSettingsConfig: 'maven-settings', mavenLocalRepo: '.repository') {
+            	 withMaven(maven: 'Maven3.6.0', mavenSettingsConfig: 'maven-settings', mavenLocalRepo: '.repository') {
 	      			 sh "mvn install -DskipTests"
             	 }
         	 }
