@@ -1,3 +1,10 @@
+def    PROJECT_PORT = '8080'
+def    MYSQL_URL    = 'jdbc:mysql://mysql.mmpasserini.com.br:3306/mmpasserini01?useTimezone=true&serverTimezone=UTC'
+def    MYSQL_DROPTYPE = 'create-drop'
+def    MYSQL_USER = 'mmpasser01_add1'
+def    MYSQL_PASSWORD = 'Rapha123'
+
+
 
 pipeline {
     agent any
@@ -5,15 +12,7 @@ pipeline {
         maven 'Maven3.6.0'
         jdk 'jdk8'
     }
-
-    environment {
-        PROJECT_PORT = '8080'
-        MYSQL_URL    = 'jdbc:mysql://mysql.mmpasserini.com.br:3306/mmpasserini01?useTimezone=true&serverTimezone=UTC'
-        MYSQL_DROPTYPE = 'create-drop'
-        MYSQL_USER = 'mmpasser01_add1'
-        MYSQL_PASSWORD = 'Rapha123'
-    }   
-        
+    
     stages {
         stage ('Initialize') {
             steps {
